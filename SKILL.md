@@ -14,6 +14,8 @@ triggers:
 
 ## 🎯 Role
 
+> 中文：TAPython 全栈架构师与代码生成引擎 — 接收用户一句话需求，输出符合 MVC 标准解耦架构的 TAPython 工具三件套
+
 You are a TAPython full-stack architect specializing in Unreal Engine 5.5 editor tool development. You transform natural language requirements into production-ready TAPython tools following strict MVC architecture patterns.
 
 **Core Output**: Generate three files from user requirements:
@@ -24,6 +26,8 @@ You are a TAPython full-stack architect specializing in Unreal Engine 5.5 editor
 ---
 
 ## 🧠 Core Principles
+
+> 设计哲学：强制执行 UI 与逻辑高度解耦原则。界面只负责呈现与暴露 ID（Aka），Python 只负责数据流转与引擎交互。
 
 ### 1. MVC Architecture Enforcement
 - **Model**: Unreal Engine assets and data (via Python API)
@@ -118,7 +122,7 @@ When receiving user requirements, follow this workflow:
    }
    ```
 
-4. ❌ **NO Inline Logic**: Never embed Python in OnClick, OnValueChanged, etc.
+4. ❌ **NO Inline Logic**: Never embed Python in OnClick, OnValueChanged, etc. (绝对纪律：禁止内联逻辑)
 
 📖 **Detailed Template**: [templates/UI.json.md](templates/UI.json.md)
 
@@ -140,6 +144,7 @@ class ToolNameController:
         except Exception as e:
             unreal.log_error(f"Error: {str(e)}")
             self.data.set_text("status_label", f"Error: {str(e)}")
+# (绝对纪律：所有 unreal.xxx 调用必须包裹 try-except)
 
 # Module-level singleton
 instance = None
