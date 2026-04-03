@@ -39,6 +39,11 @@ TAPython-skill/
 ├── examples/                     # 💡 Complete implementation examples
 │   └── CompleteToolExample.md    #    Batch Renamer tool (end-to-end)
 │
+├── guides/                       # 📘 Practical guides
+│   ├── Troubleshooting.md        #    Common issues and solutions (故障排除)
+│   ├── FAQ.md                    #    Frequently asked questions (常见问题)
+│   └── Performance.md            #    Performance optimization (性能优化)
+│
 └── TAPython_docs/               # 📚 Official TAPython documentation
     ├── Welcome To TAPython.md
     ├── Chameleon Tool.md
@@ -75,6 +80,7 @@ User requirement → SKILL.md → Generate 3 files → Validate → Done
 | **Implementation patterns** | [patterns/CommonPatterns.md](patterns/CommonPatterns.md) | 4 patterns: asset processing, actor spawning, browser, settings |
 | **Avoid mistakes** | [pitfalls/CommonPitfalls.md](pitfalls/CommonPitfalls.md) | 7 critical pitfalls with solutions |
 | **Full example** | [examples/CompleteToolExample.md](examples/CompleteToolExample.md) | Complete Batch Renamer implementation |
+| **Troubleshooting** | [guides/](guides/) | Troubleshooting, FAQ, performance optimization |
 
 ---
 
@@ -134,14 +140,15 @@ User requirement → SKILL.md → Generate 3 files → Validate → Done
 
 | Document | Lines | Purpose | When to Use |
 |----------|-------|---------|-------------|
-| **SKILL.md** | 442 | Quick reference | Every tool generation |
+| **SKILL.md** | ~450 | Quick reference | Every tool generation |
 | **templates/** | ~500 total | Detailed templates | Need complete structure |
 | **widgets/Catalog.md** | ~400 | Widget reference | Choosing widgets |
 | **patterns/CommonPatterns.md** | ~600 | Implementation patterns | Following best practices |
 | **pitfalls/CommonPitfalls.md** | ~400 | Mistake prevention | Avoiding common errors |
 | **examples/CompleteToolExample.md** | ~400 | Full example | Learning complete workflow |
+| **guides/** | ~570 total | Troubleshooting, FAQ, Performance | Debugging issues, optimization |
 
-**Total**: ~2700 lines of documentation (vs. original 1116-line monolithic file)
+**Total**: ~3270 lines of documentation (vs. original 1116-line monolithic file)
 
 ---
 
@@ -174,6 +181,14 @@ User requirement → SKILL.md → Generate 3 files → Validate → Done
 2. Follow step-by-step implementation
 3. Apply to your own tool
 
+**Having performance issues?**
+1. Open: [guides/Performance.md](guides/Performance.md)
+2. Find your bottleneck category
+3. Apply optimization pattern
+
+**Need answers to common questions?**
+1. Check: [guides/FAQ.md](guides/FAQ.md)
+
 ---
 
 ## 🎯 Design Philosophy
@@ -194,10 +209,11 @@ User requirement → SKILL.md → Generate 3 files → Validate → Done
 
 ### Optimization Metrics
 
-- ✅ **60% reduction** in main file size (1116 → 442 lines)
-- ✅ **7 specialized documents** for different needs
+- ✅ **60% reduction** in main file size (original 1116 → 442 lines in SKILL.md)
+- ✅ **10 specialized documents** for different needs (was 7)
 - ✅ **Clear navigation** with markdown links
 - ✅ **Preserved all functionality** from original
+- ✅ **New guides/** directory for troubleshooting, FAQ, and performance
 
 ---
 
@@ -219,6 +235,11 @@ User requirement → SKILL.md → Generate 3 files → Validate → Done
 
 ### Examples
 - [Batch Renamer - Complete Example](examples/CompleteToolExample.md)
+
+### Guides
+- [Troubleshooting](guides/Troubleshooting.md)
+- [FAQ](guides/FAQ.md)
+- [Performance](guides/Performance.md)
 
 ---
 
@@ -272,6 +293,7 @@ To improve this skill:
 |---------|------|---------|
 | 1.0 | 2026-03-30 | Initial structure with 1116-line SKILL.md |
 | 2.0 | 2026-03-30 | **Modular restructure**: 442-line SKILL.md + 7 specialized documents |
+| 3.0 | 2026-04-03 | **Full optimization**: Deleted Prompt.md (merged into SKILL.md), added guides/ directory, expanded ChameleonData API and 4 TAPython_docs files |
 
 ---
 
@@ -281,4 +303,4 @@ Part of the TAPython skill documentation. Use freely for Unreal Engine 5.5 tool 
 
 ---
 
-*Last updated: 2026-03-30*
+*Last updated: 2026-04-03*

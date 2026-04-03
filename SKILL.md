@@ -345,13 +345,18 @@ Critical pitfalls to avoid:
 
 ## 📚 Documentation References
 
+### Guides (指南)
+- [Troubleshooting / 故障排除](guides/Troubleshooting.md) - Common issues and solutions
+- [FAQ / 常见问题](guides/FAQ.md) - Frequently asked questions
+- [Performance / 性能优化](guides/Performance.md) - Optimization best practices
+
 ### Core Documentation
 - [Welcome To TAPython](TAPython_docs/Welcome To TAPython.md) - Introduction and overview
 - [File Structure of TAPython](TAPython_docs/File Structure of TAPython.md) - Project organization
 - [How to install TAPython](TAPython_docs/How to install TAPython.md) - Setup guide
 
 ### UI Development
-- [Chameleon Tool](TAPython_docs/Chameleon Tool.md) - Core UI system
+- [Chameleon Tool](TAPython_docs/Chameleon Tool.md) - Core UI system and lifecycle
 - [Using Slate to Add Interface for Python Tools](TAPython_docs/Using Slate to Add Interface for Python Tools.md) - UI fundamentals
 - [Slate Overview](TAPython_docs/Slate Overview.md) - Widget reference
 - [Built-in Tools](TAPython_docs/Built-in Tools.md) - Example tools
@@ -364,7 +369,7 @@ Critical pitfalls to avoid:
 - [Canvas Layout](TAPython_docs/Canvas Layout.md) - Absolute positioning
 
 ### Data & Communication
-- [TA Python ChameleonData API](TAPython_docs/TA Python ChameleonData API.md) - Data bridge API
+- [TA Python ChameleonData API](TAPython_docs/TA Python ChameleonData API.md) - **Core data bridge API** (complete reference)
 - [Get Value from Slate](TAPython_docs/Get Value from Slate.md) - Retrieving widget values
 - [Variable Placeholder](TAPython_docs/Variable Placeholder.md) - Runtime placeholders
 
@@ -375,7 +380,7 @@ Critical pitfalls to avoid:
 
 ### Execution & Lifecycle
 - [Execute Order of Python Code in Chameleon Tool](TAPython_docs/Execute Order of Python Code in Chameleon Tool.md) - Initialization sequence
-- [Reload Tool](TAPython_docs/Reload Tool.md) - Hot reloading
+- [Reload Tool](TAPython_docs/Reload Tool.md) - Hot reloading and best practices
 - [On Close Callbacks](TAPython_docs/On Close Callbacks.md) - Cleanup handlers
 
 ### APIs
@@ -383,7 +388,7 @@ Critical pitfalls to avoid:
 - [Python Editor Extended API](TAPython_docs/Python Editor Extended API.md) - Extended functionality
 - [Need More Python APIs](TAPython_docs/Need More Python APIs.md) - API requests
 
-### Tutorials
+### Tutorials & Debugging
 - [Add a Rename Tool Step by Step](TAPython_docs/Add a Rename Tool Step by Step.md) - Beginner tutorial
 - [How to Debug Python in UE](TAPython_docs/How to Debug Python in UE.md) - Debugging guide
 - [Learning Unreal Engine with Python](TAPython_docs/Learning Unreal Engine with Python.md) - Learning resources
@@ -441,6 +446,7 @@ For detailed information, refer to:
 - **Patterns**: [patterns/CommonPatterns.md](patterns/CommonPatterns.md) - Implementation patterns
 - **Pitfalls**: [pitfalls/CommonPitfalls.md](pitfalls/CommonPitfalls.md) - Common mistakes and solutions
 - **Examples**: [examples/CompleteToolExample.md](examples/CompleteToolExample.md) - Complete implementation example
+- **Guides**: [guides/](guides/) - Troubleshooting, FAQ, and performance optimization
 
 ---
 
