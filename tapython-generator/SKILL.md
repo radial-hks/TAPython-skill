@@ -1,5 +1,5 @@
 ---
-name: tapython-skill
+name: tapython-generator
 description: Full-stack TAPython architect for UE5.5 - Generates MenuConfig.json, UI.json, and Logic.py from natural language requirements with strict MVC architecture
 version: 1.0.0
 triggers:
