@@ -438,6 +438,48 @@ When creating a new TAPython tool:
 
 ---
 
+## 🛡️ Native API Safety Protocol
+
+> 中文：原生 API 安全协议 — 确保 Logic.py 中所有 `unreal.xxx` 调用使用当前引擎版本的精确签名。
+
+### "Ask First" Paradigm
+
+When generating Logic.py that involves `unreal.xxx` native API calls:
+
+1. **Identify** which engine domains the task requires (assets, actors, materials, etc.)
+2. **Load** the corresponding module from `../ue-api-navigator/modules/<domain>.md`
+3. **Use exact signatures** from the loaded module — never guess parameters
+4. If a module is not available, use `hasattr()` defensive programming patterns
+
+### Defensive Programming Rule
+
+For any `unreal.xxx` API call that may vary between UE versions, wrap with feature detection:
+
+```python
+if hasattr(unreal.EditorAssetLibrary, "target_method"):
+    result = unreal.EditorAssetLibrary.target_method(args)
+else:
+    unreal.log_warning("API not available in this UE version, using fallback.")
+    result = fallback_implementation(args)
+```
+
+### API Usage Priority
+
+| Layer | API Source | When to Use |
+|-------|-----------|-------------|
+| UI / Framework | `unreal.PythonBPLib`, `ChameleonData` | Always for UI, data binding, menus |
+| Engine Logic | `unreal.xxx` native API | Assets, actors, materials, animations |
+| Fallback | `hasattr()` + probe script | Unknown or version-sensitive APIs |
+
+### Cross-Skill Reference
+
+This skill works with `ue-api-navigator` for API accuracy:
+- **Routing table**: `../ue-api-navigator/SKILL.md` — domain → module mapping
+- **API signatures**: `../ue-api-navigator/modules/` — 15 domain-specific reference files
+- **PythonBPLib**: `../ue-api-navigator/modules/core_misc.md` — TAPython core API
+
+---
+
 ## 📖 Extended Documentation
 
 For detailed information, refer to:
