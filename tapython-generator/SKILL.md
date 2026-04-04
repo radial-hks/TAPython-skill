@@ -447,8 +447,8 @@ When creating a new TAPython tool:
 When generating Logic.py that involves `unreal.xxx` native API calls:
 
 1. **Identify** which engine domains the task requires (assets, actors, materials, etc.)
-2. **Load** the corresponding module from `../ue-api-navigator/modules/<domain>.md`
-3. **Use exact signatures** from the loaded module — never guess parameters
+2. **Load** the corresponding module from `../ue-api-navigator/modules/<domain>.md` by opening and reading that Markdown file's contents into your working context using the available file/tool access mechanism; do not treat this as a Python import or rely only on the filename/module name
+3. **Use exact signatures** copied or transcribed from the loaded module content — never guess parameters or invent overloads; if file access is unavailable, explicitly say so instead of assuming signatures
 4. If a module is not available, use `hasattr()` defensive programming patterns
 
 ### Defensive Programming Rule

@@ -1,4 +1,4 @@
-# Unreal Python API — Ai Navigation
+# Unreal Python API — AI Navigation
 
 > Auto-generated from PythonStub. AI must use these exact signatures for the current UE version.
 
