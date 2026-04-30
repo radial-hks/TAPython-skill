@@ -16,6 +16,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+site/dist/
 downloads/
 eggs/
 .eggs/
@@ -43,7 +44,12 @@ env/
 # Logs
 *.log
 
+# Node
+node_modules/
+tool-hub-site/node_modules/
+
 # Temporary files
 *.tmp
 *.bak
 plan
+site/
