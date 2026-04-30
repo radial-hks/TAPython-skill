@@ -14,22 +14,25 @@ This repository hosts a set of AI-powered skills that help developers rapidly bu
 |-------|------|----------|
 | [tapython-generator](tapython-generator/) | Full-stack TAPython architect — generates `MenuConfig.json`, `UI.json`, and `Controller.py` from natural language with strict MVC architecture | `TAPython`, `Chameleon tool`, `Slate UI`, `UE5 tool` |
 | [ue-api-navigator](ue-api-navigator/) | UE Python API navigator — splits the 37MB PythonStub into 15 domain modules (7,629 classes, 44,235 methods) for on-demand AI loading, eliminating API hallucination | `unreal API`, `UE native API`, `unreal.xxx`, `PythonStub` |
+| [tapython-doc-exporter](tapython-doc-exporter/) | TAPython tool documentation exporter — turns an existing tool folder into a complete Markdown handoff document with MenuConfig, View JSON, Controller Python, helper files, and deployment notes | `export tool doc`, `share TAPython tool`, `tool documentation`, `生成工具MD` |
 
 ### How They Work Together
 
 ```
 User: "Build a batch asset renaming tool"
 
-  tapython-generator                 ue-api-navigator
-  ─────────────────                  ────────────────────
+  tapython-generator                 ue-api-navigator                  tapython-doc-exporter
+  ─────────────────                  ────────────────────              ──────────────────────
   1. MenuConfig.json (menu entry)    3. Load modules/asset_management.md
   2. UI.json (Chameleon layout)      4. Provide exact unreal.EditorAssetLibrary signatures
   5. Controller.py (logic using verified signatures from step 4)
+                                                                       6. Export shareable Markdown docs
 ```
 
 - **tapython-generator** owns the MVC scaffold (menu + UI + controller)
 - **ue-api-navigator** provides precise `unreal.xxx` API signatures for the controller logic
-- Neither guesses API parameters — signatures are extracted from your project's real PythonStub
+- **tapython-doc-exporter** packages a completed TAPython tool into a deployment-ready Markdown document
+- The generator and API navigator do not guess API parameters — signatures are extracted from your project's real PythonStub
 
 ## Quick Start
 
@@ -39,6 +42,7 @@ User: "Build a batch asset renaming tool"
 
 - **To build a TAPython tool** — mention `TAPython`, `Chameleon tool`, `Slate UI`, or `UE5 tool`
 - **To look up UE native API** — mention `unreal API`, `unreal.xxx`, or `PythonStub`
+- **To export a completed tool document** — mention `export tool doc`, `share TAPython tool`, `tool documentation`, or `生成工具MD`
 
 ### 3. (Optional) Regenerate API modules for your UE version
 
@@ -90,6 +94,9 @@ TAPython-skill/
 │   │   └── core_misc.md          3,747 classes 18,761 methods
 │   └── tools/
 │       └── generate_api_skills.py   # Stub → modules splitting script
+│
+├── tapython-doc-exporter/     # Skill 3: TAPython tool documentation export
+│   └── SKILL.md               # Export protocol, document template, and safety rules
 │
 └── .gitignore
 ```

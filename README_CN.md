@@ -14,22 +14,25 @@
 |------|------|-----------|
 | [tapython-generator](tapython-generator/) | TAPython 全栈架构师 — 根据自然语言需求生成 `MenuConfig.json`、`UI.json` 和 `Controller.py`，严格遵循 MVC 解耦架构 | `TAPython`、`Chameleon tool`、`Slate UI`、`UE5 tool` |
 | [ue-api-navigator](ue-api-navigator/) | UE Python API 导航器 — 将 37MB PythonStub 拆分为 15 个领域模块（7,629 类、44,235 方法），按需加载消除 API 幻觉 | `unreal API`、`UE native API`、`unreal.xxx`、`PythonStub` |
+| [tapython-doc-exporter](tapython-doc-exporter/) | TAPython 工具文档导出器 — 将已完成工具目录整合为包含 MenuConfig、View JSON、Controller Python、辅助文件和部署说明的 Markdown 交付文档 | `导出工具文档`、`分享TAPython工具`、`生成工具MD`、`tool documentation` |
 
-### 两技能协作流程
+### 三技能协作流程
 
 ```
 用户："做一个批量资产重命名工具"
 
-  tapython-generator                 ue-api-navigator
-  ─────────────────                  ────────────────────
+  tapython-generator                 ue-api-navigator                  tapython-doc-exporter
+  ─────────────────                  ────────────────────              ──────────────────────
   1. MenuConfig.json（菜单入口）      3. 加载 modules/asset_management.md
   2. UI.json（Chameleon 界面布局）     4. 提供 unreal.EditorAssetLibrary 精确签名
   5. Controller.py（使用第 4 步验证过的签名编写逻辑）
+                                                                       6. 导出可分享的 Markdown 文档
 ```
 
 - **tapython-generator** 负责 MVC 脚手架（菜单 + 界面 + 控制器）
 - **ue-api-navigator** 提供控制器逻辑中 `unreal.xxx` 的精确 API 签名
-- 两者均不猜测 API 参数 — 签名直接从项目的真实 PythonStub 中提取
+- **tapython-doc-exporter** 将已完成的 TAPython 工具打包为可部署、可分享的 Markdown 文档
+- **tapython-generator** 和 **ue-api-navigator** 不猜测 API 参数 — 签名直接从项目的真实 PythonStub 中提取
 
 ## 快速开始
 
@@ -39,6 +42,7 @@
 
 - **构建 TAPython 工具** — 提及 `TAPython`、`Chameleon tool`、`Slate UI` 或 `UE5 tool`
 - **查询 UE 原生 API** — 提及 `unreal API`、`unreal.xxx` 或 `PythonStub`
+- **导出工具分享文档** — 提及 `导出工具文档`、`分享TAPython工具`、`生成工具MD` 或 `tool documentation`
 
 ### 3.（可选）为你的 UE 版本重新生成 API 模块
 
@@ -90,6 +94,9 @@ TAPython-skill/
 │   │   └── core_misc.md          3,747 类 18,761 方法
 │   └── tools/
 │       └── generate_api_skills.py   # 存根 → 模块拆分脚本
+│
+├── tapython-doc-exporter/     # 技能 3：TAPython 工具文档导出
+│   └── SKILL.md               # 导出协议、文档模板与安全规则
 │
 └── .gitignore
 ```
