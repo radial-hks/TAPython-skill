@@ -1,17 +1,21 @@
 import {
   ApiOutlined,
   AppstoreOutlined,
+  ArrowLeftOutlined,
   CheckCircleOutlined,
   CloudDownloadOutlined,
   CodeOutlined,
   DiffOutlined,
+  FileProtectOutlined,
   FileSearchOutlined,
   InfoCircleOutlined,
   SafetyCertificateOutlined,
+  StarOutlined,
   UploadOutlined
 } from '@ant-design/icons';
 import {
   Alert,
+  Avatar,
   Badge,
   Button,
   Card,
@@ -41,7 +45,8 @@ import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, Tool
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
 
-type ViewMode = 'tools' | 'detail' | 'compare' | 'submit';
+type ViewMode = 'tools' | 'tool' | 'submit';
+type ToolViewMode = 'detail' | 'compare';
 
 const riskColor: Record<string, string> = {
   low: 'green',
@@ -60,13 +65,14 @@ const statusColor: Record<string, string> = {
 
 function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('tools');
-  const [selectedSlug, setSelectedSlug] = useState(tools[0]?.slug ?? '');
+  const [toolViewMode, setToolViewMode] = useState<ToolViewMode>('detail');
+  const [selectedSlug, setSelectedSlug] = useState<string>();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string>();
   const [riskLevel, setRiskLevel] = useState<string>();
   const [status, setStatus] = useState<string>();
 
-  const selectedTool = tools.find((tool) => tool.slug === selectedSlug) ?? tools[0];
+  const selectedTool = selectedSlug ? tools.find((tool) => tool.slug === selectedSlug) : undefined;
 
   const filteredTools = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -103,12 +109,10 @@ function App() {
             <Title level={3}>编辑器工具分享站</Title>
           </Space>
           <Segmented
-            value={viewMode}
-            onChange={(value) => setViewMode(value as ViewMode)}
+            value={viewMode === 'submit' ? 'submit' : 'tools'}
+            onChange={(value) => setViewMode(value as 'tools' | 'submit')}
             options={[
               { label: '工具库', value: 'tools', icon: <AppstoreOutlined /> },
-              { label: '详情', value: 'detail', icon: <FileSearchOutlined /> },
-              { label: '版本对比', value: 'compare', icon: <DiffOutlined /> },
               { label: '投稿', value: 'submit', icon: <UploadOutlined /> }
             ]}
           />
@@ -129,12 +133,21 @@ function App() {
             setStatus={setStatus}
             onOpenTool={(tool) => {
               setSelectedSlug(tool.slug);
-              setViewMode('detail');
+              setToolViewMode('detail');
+              setViewMode('tool');
             }}
           />
         )}
-        {viewMode === 'detail' && selectedTool && <ToolDetail tool={selectedTool} />}
-        {viewMode === 'compare' && selectedTool && <CompareView tool={selectedTool} />}
+        {viewMode === 'tool' && selectedTool && toolViewMode === 'detail' && (
+          <ToolDetail
+            tool={selectedTool}
+            onBack={() => setViewMode('tools')}
+            onCompare={() => setToolViewMode('compare')}
+          />
+        )}
+        {viewMode === 'tool' && selectedTool && toolViewMode === 'compare' && (
+          <CompareView tool={selectedTool} onBack={() => setToolViewMode('detail')} />
+        )}
         {viewMode === 'submit' && <SubmitGuide />}
       </Content>
     </Layout>
@@ -272,65 +285,137 @@ function ToolCatalog({
   );
 }
 
-function ToolDetail({ tool }: { tool: ToolRecord }) {
+function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () => void; onCompare: () => void }) {
   const latestVersion = tool.versions[0];
+  const latestManifest = latestVersion.manifest;
+  const fileCount = latestManifest.files.length;
 
   return (
-    <Space direction="vertical" size={16} className="full-width">
-      <Card>
-        <Flex justify="space-between" align="flex-start" gap={16} wrap="wrap">
-          <Space direction="vertical" size={8}>
-            <Space wrap>
-              <Title level={2}>{tool.displayName}</Title>
-              <Tag color={riskColor[tool.riskLevel]}>风险 {tool.riskLevel}</Tag>
-              <Tag color={statusColor[tool.status]}>{tool.status}</Tag>
+    <Space direction="vertical" size={18} className="full-width detail-page">
+      <Flex className="detail-breadcrumb" align="center" gap={8} wrap="wrap">
+        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onBack}>
+          返回
+        </Button>
+        <Text type="secondary">工具 /</Text>
+        <Text>{tool.slug}</Text>
+      </Flex>
+
+      <section className="tool-hero">
+        <Flex justify="space-between" align="flex-start" gap={20} wrap="wrap">
+          <Flex gap={16} align="flex-start" className="tool-hero-main">
+            <Avatar className="tool-avatar" shape="square" size={72}>
+              {tool.displayName.slice(0, 1).toUpperCase()}
+            </Avatar>
+            <Space direction="vertical" size={10} className="tool-hero-copy">
+              <Space wrap align="center">
+                <Title level={1}>{tool.displayName}</Title>
+                <Tag icon={<CodeOutlined />} color="blue">
+                  TAPython
+                </Tag>
+                <Tag color={statusColor[tool.status]}>{tool.status}</Tag>
+              </Space>
+              <Paragraph className="detail-summary">{tool.description}</Paragraph>
+              <Paragraph type="secondary" className="source-line">
+                数据来源于 <Text strong>{tool.sourceDocument}</Text>，维护团队是 <Text strong>{tool.ownerTeam}</Text>
+              </Paragraph>
             </Space>
-            <Paragraph className="detail-summary">{tool.description}</Paragraph>
-            <Space wrap>
-              {tool.tags.map((tag) => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
-            </Space>
-          </Space>
-          <Space wrap>
-            <Button icon={<CloudDownloadOutlined />} href={latestVersion.downloads.readme} target="_blank">
-              README
+          </Flex>
+          <Space wrap className="hero-actions">
+            <Button icon={<StarOutlined />}>收藏</Button>
+            <Button icon={<DiffOutlined />} onClick={onCompare}>
+              版本对比
             </Button>
-            <Button icon={<ApiOutlined />} href={latestVersion.downloads.manifest} target="_blank">
-              manifest
-            </Button>
-            <Button icon={<CloudDownloadOutlined />} disabled={!latestVersion.downloads.package}>
-              ZIP 待生成
+            {latestVersion.downloads.markdown ? (
+              <Button icon={<FileSearchOutlined />} href={latestVersion.downloads.markdown} target="_blank">
+                Markdown
+              </Button>
+            ) : null}
+            <Button type="primary" icon={<CloudDownloadOutlined />} href={latestVersion.downloads.readme} target="_blank">
+              获取工具
             </Button>
           </Space>
         </Flex>
-      </Card>
+      </section>
 
-      <Tabs
-        items={[
-          {
-            key: 'overview',
-            label: '概览',
-            children: <ToolOverview tool={tool} />
-          },
-          {
-            key: 'install',
-            label: '安装',
-            children: <InstallGuide tool={tool} />
-          },
-          {
-            key: 'manifest',
-            label: 'Manifest',
-            children: <ManifestPanel manifest={latestVersion.manifest} />
-          },
-          {
-            key: 'versions',
-            label: '版本',
-            children: <VersionTimeline versions={tool.versions} />
-          }
-        ]}
-      />
+      <section className="metric-strip" aria-label="Tool release summary">
+        <MetricItem label="来源" value={tool.sourceMode ?? 'json'} icon={<FileSearchOutlined />} />
+        <MetricItem label="版本" value={`V ${latestVersion.version}`} icon={<Badge status="processing" />} />
+        <MetricItem label="安全检测" value={tool.status === 'approved' ? '通过检测' : '待审核'} icon={<SafetyCertificateOutlined />} />
+        <MetricItem label="文件数" value={fileCount} icon={<FileProtectOutlined />} />
+        <MetricItem label="版本历史" value={tool.versions.length} icon={<DiffOutlined />} />
+      </section>
+
+      <ToolSafetyPanel tool={tool} />
+
+      <Card className="detail-tabs-card">
+        <Tabs
+          size="large"
+          items={[
+            {
+              key: 'overview',
+              label: '概述',
+              children: <ToolOverview tool={tool} />
+            },
+            {
+              key: 'install',
+              label: '安装方式',
+              children: <InstallGuide tool={tool} />
+            },
+            {
+              key: 'manifest',
+              label: 'Manifest',
+              children: <ManifestPanel manifest={latestManifest} />
+            },
+            {
+              key: 'versions',
+              label: '版本历史',
+              children: <VersionTimeline versions={tool.versions} />
+            }
+          ]}
+        />
+      </Card>
     </Space>
+  );
+}
+
+function MetricItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
+  return (
+    <div className="metric-item">
+      <span className="metric-icon">{icon}</span>
+      <div>
+        <Text strong>{value}</Text>
+        <Text type="secondary">{label}</Text>
+      </div>
+    </div>
+  );
+}
+
+function ToolSafetyPanel({ tool }: { tool: ToolRecord }) {
+  return (
+    <Card className="safety-panel">
+      <Flex align="flex-start" gap={14} wrap="wrap">
+        <div className="safety-icon"><SafetyCertificateOutlined /></div>
+        <Space direction="vertical" size={10} className="safety-content">
+          <Space wrap align="center">
+            <Title level={4}>安全检测</Title>
+            <Tag color={riskColor[tool.riskLevel]}>风险 {tool.riskLevel}</Tag>
+          </Space>
+          <div className="safety-results">
+            <div>
+              <Text strong>Manifest 校验</Text>
+              <Text type="secondary">文件 hash、安装路径和 MenuConfig 合并项已生成。</Text>
+            </div>
+            <div>
+              <Text strong>安装风险</Text>
+              <Text type="secondary">{tool.summary.riskNotes[0] ?? '暂无额外风险说明。'}</Text>
+            </div>
+          </div>
+          <Paragraph type="secondary" className="safety-note">
+            检测结果来自当前工具文档与生成 manifest，仅作为安装前参考；写入项目目录前仍需确认目标路径、同名文件和 MenuConfig diff。
+          </Paragraph>
+        </Space>
+      </Flex>
+    </Card>
   );
 }
 
@@ -344,6 +429,10 @@ function ToolOverview({ tool }: { tool: ToolRecord }) {
         <Descriptions.Item label="团队">{tool.ownerTeam}</Descriptions.Item>
         <Descriptions.Item label="挂载点">{tool.mountPoint}</Descriptions.Item>
         <Descriptions.Item label="入口 JSON">{tool.entryJson}</Descriptions.Item>
+        <Descriptions.Item label="源文档模式">{tool.sourceMode ?? 'json'}</Descriptions.Item>
+        <Descriptions.Item label="源文档" span={2}>
+          {tool.sourceDocument}
+        </Descriptions.Item>
         <Descriptions.Item label="安装路径" span={2}>
           {tool.installPath}
         </Descriptions.Item>
@@ -380,6 +469,12 @@ function InstallGuide({ tool }: { tool: ToolRecord }) {
       <Paragraph>
         Agent 应先读取 <Text code>/api/tools/{tool.slug}.json</Text>，再下载 manifest 和工具包，校验后展示安装预览。
       </Paragraph>
+      {tool.versions[0].downloads.markdown ? (
+        <Paragraph>
+          Markdown-first 工具也可以让 Agent 直接读取 <Text code>{tool.versions[0].downloads.markdown}</Text>，从文档正文、外部文件引用和 manifest
+          生成安装计划。
+        </Paragraph>
+      ) : null}
       <Title level={4}>MenuConfig 合并项</Title>
       <pre className="code-block">{JSON.stringify(latestManifest.menuConfigMerge.itemsToAdd, null, 2)}</pre>
     </Card>
@@ -446,7 +541,7 @@ function VersionTimeline({ versions }: { versions: ToolVersion[] }) {
   );
 }
 
-function CompareView({ tool }: { tool: ToolRecord }) {
+function CompareView({ tool, onBack }: { tool: ToolRecord; onBack: () => void }) {
   const [fromVersion, setFromVersion] = useState(tool.versions[1]?.version ?? tool.versions[0]?.version);
   const [toVersion, setToVersion] = useState(tool.versions[0]?.version);
 
@@ -482,7 +577,15 @@ function CompareView({ tool }: { tool: ToolRecord }) {
   ];
 
   return (
-    <Space direction="vertical" size={16} className="full-width">
+    <Space direction="vertical" size={16} className="full-width detail-page">
+      <Flex className="detail-breadcrumb" align="center" gap={8} wrap="wrap">
+        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onBack}>
+          返回详情
+        </Button>
+        <Text type="secondary">工具 /</Text>
+        <Text>{tool.slug}</Text>
+        <Text type="secondary">/ 版本对比</Text>
+      </Flex>
       <Card>
         <Flex gap={12} wrap="wrap" align="center">
           <Text strong>工具：</Text>

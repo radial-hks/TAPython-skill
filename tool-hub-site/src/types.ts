@@ -56,6 +56,7 @@ export interface ToolVersion {
   downloads: {
     manifest: string;
     readme: string;
+    markdown?: string;
     package: string;
   };
   manifest: ToolManifest;
@@ -77,10 +78,12 @@ export interface ToolRecord {
   installPath: string;
   entryJson: string;
   sourceDocument: string;
+  sourceMode?: string;
   updatedAt: string;
   downloads: {
     latestManifest: string;
     latestReadme: string;
+    latestMarkdown?: string;
     latestPackage: string;
   };
   summary: {
@@ -90,6 +93,7 @@ export interface ToolRecord {
     installSteps: string[];
     riskNotes: string[];
   };
+  documentationMarkdown?: string;
   versions: ToolVersion[];
 }
 

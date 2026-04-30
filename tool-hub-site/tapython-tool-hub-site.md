@@ -6,6 +6,8 @@
 
 工具包以文档、工具文件、manifest、版本记录和下载制品为核心资产。站点需要支持公司局域网部署，也能演进到在线云服务器部署。
 
+当前实现已经进入“静态维护、基础可用”阶段：通过仓库中的 Markdown 工具文档维护工具数据，构建时生成站点 API、manifest、Markdown 下载和引用资源。现阶段不需要后端服务即可完成工具浏览、详情查看、安装说明、manifest 查看和版本对比。
+
 核心使用流程：
 
 1. 工具作者发布自己开发的 TAPython/Chameleon 编辑器工具。
@@ -13,6 +15,14 @@
 3. 使用者查看工具适用版本、风险、安装方式和版本记录。
 4. 使用者手动下载文档/ZIP，或让 Agent 读取 manifest 后安装到 UE 项目目录。
 5. 后续工具更新时，使用者可以比较版本差异并决定是否升级。
+
+当前静态维护流程：
+
+1. 维护者在 `data/tool-docs/` 中新增或更新工具 Markdown。
+2. 长 UI JSON、Python Controller 和 MenuConfig 通过 `@file:` 引用外部文件。
+3. 执行 `npm run build` 生成静态 API 与下载制品并验证前端。
+4. 通过 git review 审核变更。
+5. 将 `dist/` 发布到公司局域网 nginx 或其他静态服务器。
 
 ## 产品边界
 
@@ -53,6 +63,81 @@ ActorRenameTool-1.0.0.zip
     ├── manifest.json
     └── MenuConfig.snippet.json
 ```
+
+## Markdown-first 发布模型
+
+Tool Hub 的长期维护方式建议从“维护站点表单或手写 JSON”调整为“维护工具 Markdown 文档”。Markdown 是人类查阅、审核和 Agent 读取的主要资产，`manifest.json`、站点 API、搜索索引和下载包由构建脚本生成。
+
+### 两种文档形态
+
+| 模式 | 适用场景 | 说明 |
+|------|----------|------|
+| 单文件模式 | 小工具、教学示例、快速分享 | Markdown 内直接包含 MenuConfig、Chameleon UI JSON、Python Controller、安装说明和风险说明 |
+| 混合模式 | UI JSON 或 Python 较长、多人维护、需要代码审查 | Markdown 存放元数据、说明、安装、风险和版本历史；UI JSON/Python/MenuConfig 作为外部文件由 Markdown 引用 |
+
+两种模式生成同一套站点数据结构，因此搜索、详情页、manifest、版本对比和 Agent 安装链路保持一致。
+
+### Markdown front matter
+
+每份工具 Markdown 顶部必须有 front matter，用于生成结构化数据：
+
+```yaml
+---
+schemaVersion: "1.0.0"
+slug: actor-rename-tool
+name: ActorRenameTool
+displayName: Actor Rename Tool
+version: "1.1.0"
+author: TA Team
+status: approved
+description: 场景 Actor 批量重命名与 Tag 管理工具
+category: level-editing
+riskLevel: medium
+sourceMode: markdown-with-external-files
+tags: [actor, batch-rename, tag, chameleon]
+compatibility:
+  unrealEngine: ["5.3", "5.4", "5.5"]
+  tapython: ["1.2+"]
+  plugins: ["TAPython"]
+mountPoint: OnToolBarChameleon
+installPath: <Project>/TA/TAPython/Python/ActorRenameTool/
+entryJson: ActorRenameTool/ActorRenameTool.json
+---
+```
+
+正文继续面向使用者书写，包含快速开始、文件清单、架构简述、MenuConfig、View、Controller、使用说明、注意事项、版本历史和 Agent 安装指令。
+
+### 外部文件引用
+
+当 UI JSON 或 Python Controller 过长时，Markdown 使用 `@file:` 引用同目录文件：
+
+````markdown
+```json chameleon-ui path=ActorRenameTool/ActorRenameTool.json
+@file:ActorRenameTool.json
+```
+
+```python controller path=ActorRenameTool/ActorRenameTool.py
+@file:ActorRenameTool.py
+```
+````
+
+构建脚本读取引用文件，计算 hash/size，并写入 manifest 的 `files[]`。这样文档仍然是发布入口，但大型代码文件可以独立维护。
+
+外部文件引用必须提供 `path=<安装相对路径>`，生成器会把真实文件复制到 `/downloads/<tool>/<version>/` 下的对应路径，并限制读取和写入都不能越过工具文档目录或下载目录。
+
+### 构建产物
+
+Markdown-first 输入会生成：
+
+- `/api/tools/index.json`
+- `/api/tools/<tool>.json`
+- `/downloads/<tool>/<version>/manifest.json`
+- `/downloads/<tool>/<version>/README.md`
+- `/downloads/<tool>/<version>/tool.md`
+- `/downloads/<tool>/<version>/<referenced asset files>`
+- 可选 ZIP 包
+
+Agent 可以直接读取 Markdown，也可以读取生成的 API/manifest。推荐安装前始终展示目标路径、文件写入列表、hash 校验结果和 MenuConfig 合并 diff。
 
 ## Manifest 数据模型
 
