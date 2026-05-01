@@ -4,6 +4,8 @@
 
 A curated collection of [Copilot Skills](https://docs.github.com/en/copilot) for **Unreal Engine Python (TAPython)** script development.
 
+Note: the Tool Hub site has been split into a standalone repository for active development. This repository now keeps only an archived snapshot under `archive/tool-hub-site/`, while the active site lives in the sibling repository `tapython-tool-hub`.
+
 ## What Is This?
 
 This repository hosts a set of AI-powered skills that help developers rapidly build editor tools for Unreal Engine 5.5+ using [TAPython](https://github.com/cgerchenhp/TAPython). Each skill encapsulates domain knowledge, best practices, and code-generation capabilities for specific aspects of UE Python tooling.
@@ -97,6 +99,9 @@ TAPython-skill/
 │
 ├── tapython-doc-exporter/     # Skill 3: TAPython tool documentation export
 │   └── SKILL.md               # Export protocol, document template, and safety rules
+│
+├── archive/
+│   └── tool-hub-site/         # Archived snapshot of the old in-repo Tool Hub site
 │
 └── .gitignore
 ```

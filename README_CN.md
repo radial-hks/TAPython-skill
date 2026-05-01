@@ -4,6 +4,8 @@
 
 一组用于 **Unreal Engine Python (TAPython)** 脚本开发的 [Copilot Skills](https://docs.github.com/en/copilot) 技能集合。
 
+说明：Tool Hub 站点已经拆分到独立仓库中持续开发。本仓库仅保留一份归档副本，位置在 `archive/tool-hub-site/`；当前活跃站点项目位于同级独立仓库 `tapython-tool-hub`。
+
 ## 项目简介
 
 本仓库收录了一系列 AI 驱动的技能，帮助开发者使用 [TAPython](https://github.com/cgerchenhp/TAPython) 快速构建 Unreal Engine 5.5+ 编辑器工具。每个技能封装了特定领域的知识、最佳实践和代码生成能力。
@@ -97,6 +99,9 @@ TAPython-skill/
 │
 ├── tapython-doc-exporter/     # 技能 3：TAPython 工具文档导出
 │   └── SKILL.md               # 导出协议、文档模板与安全规则
+│
+├── archive/
+│   └── tool-hub-site/         # 原仓库内 Tool Hub 站点归档副本
 │
 └── .gitignore
 ```

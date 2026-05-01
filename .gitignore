@@ -46,7 +46,7 @@ env/
 
 # Node
 node_modules/
-tool-hub-site/node_modules/
+archive/tool-hub-site/node_modules/
 
 # Temporary files
 *.tmp
